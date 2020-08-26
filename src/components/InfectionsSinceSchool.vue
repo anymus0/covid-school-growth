@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ latestByCurrentCountry.deaths }}
+    <p>{{ percentageOfDifference }}%</p>
   </div>
 </template>
 
@@ -10,8 +10,13 @@ export default {
   props: ['latest'],
   data() {
     return {
-      latestByCurrentCountry: this.latest
+      //latestByCurrentCountry: this.latest.deaths
     }
-  }
+  },
+  computed: {
+    percentageOfDifference() {
+      return (((this.latest.deaths - 310) / ((this.latest.deaths + 310) / 2)) * 100).toFixed(1)
+    }
+  },
 }
 </script>
