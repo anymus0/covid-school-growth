@@ -9,25 +9,29 @@
     </v-app-bar>
 
     <v-main>
-      <v-container
-        class="fill-height"
-        fluid
-      >
+      <v-container fluid>
         <v-row
           align="center"
           justify="center"
         >
           <v-col class="text-center">
-            <h2>How much has covid infections grown since the new school year has started?</h2>
+            <h3>Growth cases since the new school year has started:</h3>
             <differenceOfInfections
               :date1="latestByCountry"
               :date2="whenSchoolStarted"
             />
-            <h2>Between the quarantine has started and ended:</h2>
+          </v-col>
+          <v-col class="text-center">
+            <h3>Growth of cases between the quarantine has started and ended:</h3>
             <differenceOfInfections
               :date1="whenSchoolStarted"
               :date2="whenQuarantineStarted"
             />
+          </v-col>
+        </v-row>
+        <v-row class="pt-12">
+          <v-col class="text-center">
+            <h3>Compare two different dates</h3>
           </v-col>
         </v-row>
       </v-container>
@@ -60,7 +64,7 @@ export default {
   methods: {
     async init() {
       this.latestByCountry = await Fetchy.Get('https://covid19-api.org/api/status/hu')
-      this.whenSchoolStarted = await Fetchy.Get('https://covid19-api.org/api/status/hu?date=2020-08-26')
+      this.whenSchoolStarted = await Fetchy.Get('https://covid19-api.org/api/status/hu?date=2020-08-02')
       this.whenQuarantineStarted = await Fetchy.Get('https://covid19-api.org/api/status/hu?date=2020-04-01')
     }
   },
