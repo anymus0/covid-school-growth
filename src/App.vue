@@ -112,7 +112,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #b4e4fa;
-  background-color: #1b1b1b;
+  background-color: rgb(20, 22, 23);
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
