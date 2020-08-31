@@ -26,17 +26,28 @@
             />
           </v-col>
         </v-row>
-        <v-row class="pt-12">
+        <v-row class="pt-12" v-if="!isEmptyDate">
           <v-col cols="12" class="text-center">
             <h3>Compare two different dates</h3>
           </v-col>
         </v-row>
+        <transition name="fade">
+          <v-row class="pt-12" align="center" justify="center" v-if="isEmptyDate">
+            <v-col cols="12">
+              <h3>Growth of cases between your selected dates</h3>
+              <differenceOfInfections
+                :date1="toDate"
+                :date2="fromDate"
+              />
+            </v-col>
+          </v-row>
+        </transition>
         <v-row class="pt-12" align="center" justify="center">
           <v-col cols="12" sm="6" md="5" class="text-center">
-            <Calendar labelText="From:" />
+            <Calendar type="from" @fromDateChange="refreshFromDate" />
           </v-col>
           <v-col cols="12" sm="6" md="5" class="text-center">
-            <Calendar labelText="To:" />
+            <Calendar type="to" @toDateChange="refreshToDate" />
           </v-col>
         </v-row>
       </v-container>
@@ -65,7 +76,9 @@ export default {
     return {
       latestByCountry: {},
       whenSchoolStarted: {},
-      whenQuarantineStarted: {}
+      whenQuarantineStarted: {},
+      fromDate: undefined,
+      toDate: undefined
     }
   },
   methods: {
@@ -73,10 +86,21 @@ export default {
       this.latestByCountry = await Fetchy.Get('https://covid19-api.org/api/status/hu')
       this.whenSchoolStarted = await Fetchy.Get('https://covid19-api.org/api/status/hu?date=2020-09-01')
       this.whenQuarantineStarted = await Fetchy.Get('https://covid19-api.org/api/status/hu?date=2020-03-28')
+    },
+    async refreshFromDate(value) {
+      this.fromDate = await Fetchy.Get(`https://covid19-api.org/api/status/hu?date=${value}`)
+    },
+    async refreshToDate(value) {
+      this.toDate = await Fetchy.Get(`https://covid19-api.org/api/status/hu?date=${value}`)
     }
   },
-  mounted() {
-    this.init()
+  computed: {
+    isEmptyDate() {
+      return (this.fromDate !== undefined) && (this.toDate !== undefined)
+    }
+  },
+  async mounted() {
+    await this.init()
   }
 }
 </script>
@@ -89,5 +113,11 @@ export default {
   text-align: center;
   color: #b4e4fa;
   background-color: #1b1b1b;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

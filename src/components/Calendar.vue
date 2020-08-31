@@ -13,13 +13,13 @@
           dark
           reactive
           v-model="date"
-          :label="labelText"
+          :label='type + ":"'
           readonly
           v-bind="attrs"
           v-on="on"
         ></v-text-field>
       </template>
-      <v-date-picker dark v-model="date" @input="menu = false; send()"></v-date-picker>
+      <v-date-picker dark v-model="date" @input="menu = false; sendDate()"></v-date-picker>
     </v-menu>
   </div>
 </template>
@@ -27,14 +27,18 @@
 <script>
   export default {
     name: 'Calendar',
-    props: ['labelText'],
+    props: ['type'],
     data: () => ({
       date: new Date().toISOString().substr(0, 10),
       menu: false
     }),
     methods: {
-      send: function () {
-        console.log(this.date)
+      async sendDate() {
+        if (this.type === 'from') {
+          this.$emit('fromDateChange', this.date)
+        } else {
+          this.$emit('toDateChange', this.date)
+        }
       }
     }
   }
